@@ -21,6 +21,6 @@ public class RestController {
     @SecurityAnatation
     public ResponseEntity test() {
         LOG.info("{}", "test");
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity("test",HttpStatus.OK);
     }
 }

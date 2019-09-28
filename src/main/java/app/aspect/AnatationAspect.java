@@ -32,7 +32,7 @@ public class AnatationAspect {
     public Object aroundCallAt(ProceedingJoinPoint pjp) {
         LOG.info("method user = {}", pjp.getSignature().getName());
         LOG.info("user = {}", currentSession);
-        if (currentSession == null) {
+        if (currentSession.getSessionId() == null) {
             return null;
         }
         Object retVal = null;
