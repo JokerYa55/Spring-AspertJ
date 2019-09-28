@@ -9,7 +9,10 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
  *
@@ -29,20 +32,20 @@ public class AnatationAspect {
     }
 
     @Around("callAtMyServiceSecurityAnnotation()")
-    public Object aroundCallAt(ProceedingJoinPoint pjp) {
+    public Object aroundCallAt(ProceedingJoinPoint pjp) throws Throwable {
         LOG.info("method user = {}", pjp.getSignature().getName());
         LOG.info("user = {}", currentSession);
-        if (currentSession.getSessionId() == null) {
-            return null;
-        }
-        Object retVal = null;
         Object[] methodArgs = pjp.getArgs();
         Arrays.asList(methodArgs).forEach((t) -> {
             LOG.info("arg = {}", t);
         });
-//        if (securityService.checkRight(user)) {
-//            retVal = pjp.proceed();
-//        }
-        return retVal;
+        if (currentSession.getSessionId() == null) {
+            LOG.info("NULL");
+            return new ResponseEntity("test", HttpStatus.UNAUTHORIZED);
+        } else {
+            Object retVal = null;
+            retVal = pjp.proceed();
+            return retVal;
+        }
     }
 }
