@@ -2,6 +2,7 @@ package app.aspect;
 
 import app.bean.UserSession;
 import java.util.Arrays;
+import static jdk.nashorn.internal.objects.NativeFunction.call;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.util.StopWatch;
 
 /**
  *
@@ -39,12 +40,16 @@ public class AnatationAspect {
         Arrays.asList(methodArgs).forEach((t) -> {
             LOG.info("arg = {}", t);
         });
+        StopWatch clock = new StopWatch(pjp.toString());
+        clock.start(pjp.toShortString());
         if (currentSession.getSessionId() == null) {
             LOG.info("NULL");
+            LOG.info(clock.prettyPrint());
             return new ResponseEntity("test", HttpStatus.UNAUTHORIZED);
         } else {
             Object retVal = null;
             retVal = pjp.proceed();
+            LOG.info(clock.prettyPrint());
             return retVal;
         }
     }
