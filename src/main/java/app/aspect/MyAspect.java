@@ -1,5 +1,6 @@
 package app.aspect;
 
+import app.bean.UserSession;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.aspectj.lang.JoinPoint;
@@ -9,6 +10,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,6 +23,9 @@ public class MyAspect {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Autowired
+    UserSession currentSession;
+    
     @Pointcut("execution(public * app.controller.RestController.*(..))")
     public void callAtMyServicePublic() {
     }
